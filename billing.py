@@ -46,7 +46,7 @@ def createDecoration(self):
 
 def createProductListFrame(self):
     # Create product frame
-    productFrame1 = components.createFrame(
+    productFrame = components.createFrame(
         self.root,
         bd=4,
         position=[6,110],
@@ -55,7 +55,7 @@ def createProductListFrame(self):
     )
 
     components.createLabel(
-        productFrame1,
+        productFrame,
         text="All Products",
         font=("goudy old style",20,"bold"),
         fg="white",
@@ -63,10 +63,10 @@ def createProductListFrame(self):
     ).pack(side=TOP,fill=X)
     
 
-    productFrame2 = components.createFrame(productFrame1,bd=2,position=[2,42],width=398,height=90)
+    productSearchFrame = components.createFrame(productFrame,bd=2,position=[2,42],width=398,height=90)
 
     components.createLabel(
-        productFrame2,
+        productSearchFrame,
         text="Search Product | By Name",
         font=("times new roman",15,"bold"),
         fg="green",
@@ -74,14 +74,14 @@ def createProductListFrame(self):
     )
     
     components.createLabel(
-        productFrame2,
+        productSearchFrame,
         text="Product Name",
         font=("times new roman",15,"bold"),
         position=[2,45]
     )
 
     productSearchInput = components.createEntry(
-        productFrame2,
+        productSearchFrame,
         textvariable=self.productSearchStringVar,
         font=("times new roman",15,"bold"),
         position=[128,47],
@@ -90,7 +90,7 @@ def createProductListFrame(self):
     )
 
     searchButton = components.createButton(
-        productFrame2,
+        productSearchFrame,
         text="Search",
         command=self.searchProduct,
         background="#2196f3",
@@ -100,7 +100,7 @@ def createProductListFrame(self):
     )
 
     showAllButton = components.createButton(
-        productFrame2,
+        productSearchFrame,
         text="Show All",
         command=self.showCart,
         background="#083531",
@@ -109,8 +109,8 @@ def createProductListFrame(self):
         height=25
     )
 
-    productFrame3 = components.createFrame(
-        productFrame1,
+    productListFrame = components.createFrame(
+        productFrame,
         bd=3,
         position=[2,140],
         width=398,
@@ -118,7 +118,7 @@ def createProductListFrame(self):
     )
 
     self.productTable = components.createTreeview(
-        productFrame3,
+        productListFrame,
         command=self.getProductData,
         columns=("pid","name","price","qty","status"),
         headers=("P ID", "Name","Price","Quantity","Status"),
@@ -126,7 +126,7 @@ def createProductListFrame(self):
     )
 
     noteLabel = components.createLabel(
-        productFrame1,
+        productFrame,
         text="Note: 'Enter 0 Quantity to remove product from the Cart'",
         font=("goudy old style",12),
         background="white",
