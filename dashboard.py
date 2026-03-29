@@ -14,6 +14,45 @@ from product import Product
 from sales import Sales
 from billing import Billing
 
+def createDecorations(self):
+    self.titleImage = components.createImage(path="images/logo1.png")
+    
+    # Create window header
+    header = Label(
+        self.root,
+        text="Inventory Management System",
+        compound=LEFT,
+        font=("times new roman",40,"bold"),
+        fg="white",
+        image= self.titleImage,
+        background="#010c48",
+        anchor="w",
+        padx=20,
+        height= 70,
+    ).place(x=0,y=0,relwidth=1)
+
+    # Create logout button
+    logoutButton = components.createButton(
+        self.root,
+        text="Logout",
+        command=self.root.destroy,
+        font=("times new roman", 15, "bold"),
+        background="yellow",
+        fg="black",
+        position=[1150,10],
+        height=50,
+        width=150
+    )
+
+    # Create footer label
+    components.createLabel(
+        self.root,
+        font=("times new roman",12),
+        text="IMS-Inventory Management System",
+        background="#4d636d",
+        fg="white"
+    ).pack(side=BOTTOM, fill=X)
+
 def createNavigationMenu(self):
     # List of interface names and the commands that buttons will execute
     menuButtons = ["Employee", "Supplier", "Category", "Products", "Sales", "Billing", "Exit"]
@@ -99,45 +138,6 @@ def createCategoryLabels(self):
         width=300,
         height=150
     )
-
-def createDecorations(self):
-    self.titleImage = components.createImage(path="images/logo1.png")
-    
-    # Create window header
-    header = Label(
-        self.root,
-        text="Inventory Management System",
-        compound=LEFT,
-        font=("times new roman",40,"bold"),
-        fg="white",
-        image= self.titleImage,
-        background="#010c48",
-        anchor="w",
-        padx=20,
-        height= 70,
-    ).place(x=0,y=0,relwidth=1)
-
-    # Create logout button
-    logoutButton = components.createButton(
-        self.root,
-        text="Logout",
-        command=self.root.destroy,
-        font=("times new roman", 15, "bold"),
-        background="yellow",
-        fg="black",
-        position=[1150,10],
-        height=50,
-        width=150
-    )
-
-    # Create footer label
-    components.createLabel(
-        self.root,
-        font=("times new roman",12),
-        text="IMS-Inventory Management System",
-        background="#4d636d",
-        fg="white"
-    ).pack(side=BOTTOM, fill=X)
 
 def createClockFrame(self):
     self.clockLabel = Label(
