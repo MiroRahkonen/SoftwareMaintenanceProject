@@ -570,14 +570,14 @@ class Billing:
         
         cartData=[self.productID,self.productName,self.productPrice,self.productQuantity,self.productStock]
 
-        present="no"
-        index=0
+        present = "no"
+        index = 0
         for product in self.productsInCart:
             if(self.productID == product[0]):
                 present="yes"
                 break
             index+=1
-        if(present = "yes"):
+        if(present == "yes"):
             confirmation=messagebox.askyesno("Confirm","Product already present\nDo you want to Update|Remove from the Cart List",parent=self.root)
             if(confirmation == False):
                 return
