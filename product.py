@@ -151,7 +151,7 @@ def checkIfInputsValid(self):
         messagebox.showerror("Error","Price must be a number",parent=self.root)
         return False
 
-    if(self.productQuantity.isdigit == False):
+    if(self.productQuantity.isdigit() == False):
         messagebox.showerror("Error","Quantity must be a number",parent=self.root)
         return False
     
