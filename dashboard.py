@@ -26,7 +26,6 @@ def createNavigationMenu(self):
         self.openBillingWindow,
         self.root.destroy
     ]
-
     self.navigationImage = components.createImage(path="images/menu_im.png",size=[200,200])
     self.navigationArrow = components.createImage(path="images/side.png")
 
@@ -37,15 +36,16 @@ def createNavigationMenu(self):
         width=200,
         height=620
     )
-    navigationImage = components.createImageLabel(navigationMenu,image=self.navigationImage)
-    navigationImage.pack(side=TOP, fill=X)
-    
+
     components.createLabel(
         navigationMenu,
         text="Menu",
         font=("times new roman",20),
         background="#009688"
     ).pack(side=TOP, fill=X)
+
+    navigationImage = components.createImageLabel(navigationMenu,image=self.navigationImage)
+    navigationImage.pack(side=TOP, fill=X)
     
     # Create all buttons in navigation menu
     for index in range(len(menuButtons)):

@@ -577,7 +577,8 @@ class Billing:
                 present="yes"
                 break
             index+=1
-        if(present == "yes"):
+        if(present == "no"):
+            self.productsInCart.append(cartData)
             confirmation=messagebox.askyesno("Confirm","Product already present\nDo you want to Update|Remove from the Cart List",parent=self.root)
             if(confirmation == False):
                 return
@@ -585,10 +586,9 @@ class Billing:
             if(self.productQuantity == "0"):
                 self.productsInCart.pop(inderror)
             else:
-                #self.productsInCart[index][2]=price_cal
                 self.productsInCart[index][3]=self.productQuantity
         else:
-            self.productsInCart.append(cartData)
+            
         self.showCart()
         self.updateBill()
 
