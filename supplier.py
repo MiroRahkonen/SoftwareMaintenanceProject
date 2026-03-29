@@ -57,6 +57,23 @@ def createSupplierList(self):
         columnWidths=(90,100,100,100)
     )
 
+def checkIfInputsValid(self):
+    if self.invoiceNumber == "":
+        messagebox.showerror("Error","Invoice No. must be required",parent=self.root)
+        return False
+    
+    if(self.invoiceNumber.isdigit() == False):
+        messagebox.showerror("Error","Invoice No. must be a number",parent=self.root)
+        return False
+
+    if self.supplierName == "" or self.supplierContact == "":
+        messagebox.showerror("Error","All fields are required",parent=self.root)
+        return False
+    
+    #All tests pass, return true
+    return True
+
+
 class Supplier:
     def __init__(self,root):
         self.root=root
@@ -76,7 +93,7 @@ class Supplier:
         createSupplierFrame(self)
         createSupplierList(self)
 
-        # Fetch 
+        # Fetch data from database
         self.fetchSuppliers()
         self.fetchTextFromInputBoxes()
 
@@ -99,41 +116,12 @@ class Supplier:
         except Exception as error:
             messagebox.showerror("Error",f"Error due to : {str(error)}")
 
-    def updateSupplier(self):
-        self.fetchTextFromInputBoxes()
-
-        if self.invoiceNumber == "":
-            messagebox.showerror("Error","Invoice must be required",parent=self.root)
-            return
-
-        connection=sqlite3.connect(database=config.databaseURL)
-        cursor=connection.cursor()
-        try:
-            cursor.execute("Select * from supplier where invoice=?",(self.invoiceNumber,))
-            response=cursor.fetchone()
-            if response==None:
-                messagebox.showerror("Error","Invalid Invoice No.",parent=self.root)
-                return
-            
-            cursor.execute("update supplier set name=?,contact=?,desc=? where invoice=?",(
-                self.supplierName,
-                self.supplierContact,
-                self.supplierDescription,
-                self.invoiceNumber,
-            ))
-            connection.commit()
-            messagebox.showinfo("Success","Supplier Updated Successfully",parent=self.root)
-            self.fetchSuppliers()
-        except Exception as error:
-            messagebox.showerror("Error",f"Error due to : {str(error)}")
-
     def addSupplier(self):
         self.fetchTextFromInputBoxes()
-
-        if self.invoiceNumber=="":
-            messagebox.showerror("Error","Invoice must be required",parent=self.root)
-            return
     
+        if(checkIfInputsValid(self) == False):
+            return
+
         connection=sqlite3.connect(database=config.databaseURL)
         cursor=connection.cursor()
         try:
@@ -157,11 +145,37 @@ class Supplier:
         except Exception as error:
             messagebox.showerror("Error",f"Error due to : {str(error)}")
 
+    def updateSupplier(self):
+        self.fetchTextFromInputBoxes()
+
+        if(checkIfInputsValid(self) == False):
+            return
+
+        connection=sqlite3.connect(database=config.databaseURL)
+        cursor=connection.cursor()
+        try:
+            cursor.execute("Select * from supplier where invoice=?",(self.invoiceNumber,))
+            response=cursor.fetchone()
+            if response==None:
+                messagebox.showerror("Error","Invalid Invoice No.",parent=self.root)
+                return
+            
+            cursor.execute("update supplier set name=?,contact=?,desc=? where invoice=?",(
+                self.supplierName,
+                self.supplierContact,
+                self.supplierDescription,
+                self.invoiceNumber,
+            ))
+            connection.commit()
+            messagebox.showinfo("Success","Supplier Updated Successfully",parent=self.root)
+            self.fetchSuppliers()
+        except Exception as error:
+            messagebox.showerror("Error",f"Error due to : {str(error)}")
+
     def deleteSupplier(self):
         self.fetchTextFromInputBoxes()
 
-        if self.invoiceNumber=="":
-            messagebox.showerror("Error","Invoice No. must be required",parent=self.root)
+        if(checkIfInputsValid(self) == False):
             return
 
         connection=sqlite3.connect(database=config.databaseURL)
@@ -205,7 +219,7 @@ class Supplier:
         self.descriptionText.delete('1.0',END)
         self.descriptionText.insert(END,supplierListing[3])
 
-    def searchInvoice():
+    def searchInvoice(self):
         self.fetchTextFromInputBoxes()
 
         if self.searchInput == "":

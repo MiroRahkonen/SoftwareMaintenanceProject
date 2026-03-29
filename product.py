@@ -134,6 +134,38 @@ def updateProductList(self):
     except Exception as error:
         messagebox.showerror("Error",f"Error due to : {str(error)}")
 
+def checkIfInputsValid(self):
+    if(self.productID == ""):
+        messagebox.showerror("Error","Select a product from the list",parent=self.root)
+        return False
+
+    if(self.productID.isdigit() == False):
+        messagebox.showerror("Error","Product ID must be a number",parent=self.root)
+        return False
+
+    if(self.productCategory == "Select" or self.productCategory == "Empty"):
+        messagebox.showerror("Error","All fields are required",parent=self.root)
+        return False
+
+    if(self.productSupplier == "Select" or self.productSupplier == "Empty"):
+        messagebox.showerror("Error","All fields are required",parent=self.root)
+        return False
+
+    if(self.productName == "" or self.productPrice == "" or self.productQuantity == ""):
+        messagebox.showerror("Error","All fields are required",parent=self.root)
+        return False
+
+    if(self.productPrice.isdigit() == False):
+        messagebox.showerror("Error","Price must be a number",parent=self.root)
+        return False
+
+    if(self.productQuantity.isdigit == False):
+        messagebox.showerror("Error","Quantity must be a number",parent=self.root)
+        return False
+    
+    #All tests pass, return true
+    return True
+
 class Product:
     def __init__(self,root):
         # Reused variables 
@@ -197,17 +229,7 @@ class Product:
     def addProduct(self):
         self.fetchTextFromInputBoxes()
 
-        # Check if inputs are valid
-        if(self.productCategory == "Select" or self.productCategory == "Empty"):
-            messagebox.showerror("Error","All fields are required",parent=self.root)
-            return
-
-        if(self.productSupplier == "Select" or self.productSupplier == "Empty"):
-            messagebox.showerror("Error","All fields are required",parent=self.root)
-            return
-
-        if(self.productName == ""):
-            messagebox.showerror("Error","All fields are required",parent=self.root)
+        if(checkIfInputsValid(self) == False):
             return
 
         # All checks pass, upload product to database
@@ -234,8 +256,7 @@ class Product:
     def updateProduct(self):
         self.fetchTextFromInputBoxes()
 
-        if self.productID == "":
-            messagebox.showerror("Error","Please select product from list",parent=self.root)
+        if(checkIfInputsValid(self) == False):
             return
 
         connection=sqlite3.connect(database=config.databaseURL)
@@ -259,8 +280,7 @@ class Product:
     def deleteProduct(self):
         self.fetchTextFromInputBoxes()
 
-        if self.productID=="":
-            messagebox.showerror("Error","Select Product from the list",parent=self.root)
+        if(checkIfInputsValid(self) == False):
             return
 
         connection=sqlite3.connect(database=config.databaseURL)
@@ -296,6 +316,7 @@ class Product:
         try:
             cursor.execute("select * from product where "+self.searchProductType+" LIKE '%"+self.searchProductName+"%'")
             response=cursor.fetchall()
+
             if len(response) == 0:
                 messagebox.showerror("Error","No record found!!!",parent=self.root)
                 return

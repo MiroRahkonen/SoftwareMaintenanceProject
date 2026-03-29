@@ -298,9 +298,9 @@ def createProductInfoFrame(self):
 
     self.inStockLabel = components.createLabel(cartWidgetFrame,text="In Stock",position=[5,70])
 
-    clearCartButton = components.createButton(
+    clearNewProductButton = components.createButton(
         cartWidgetFrame,
-        command=self.clearCart,
+        command=self.clearNewProduct,
         text="Clear",
         background="lightgray",
         position=[180,70],
@@ -320,7 +320,6 @@ def createProductInfoFrame(self):
     )
         
 def createCustomerBillFrame(self):
-    #------------------- billing area -------------------
     billingFrame = components.createFrame(
         self.root,
         bd=2,
@@ -344,7 +343,6 @@ def createCustomerBillFrame(self):
     self.billingListStringVar.pack(fill=BOTH,expand=1)
     scrolly.config(command=self.billingListStringVar.yview)
 
-    # Billing buttons
     billMenuFrame = components.createFrame(self.root,bd=2,position=[953,520],width=400,height=140)
 
     self.billAmountLabel= components.createLabel(
@@ -392,7 +390,7 @@ def createCustomerBillFrame(self):
         height=50
     )
 
-    clearButton= components.createButton(
+    clearNewProductButton = components.createButton(
         billMenuFrame,
         text="Clear All",
         command=self.clearTextInputs,
@@ -415,6 +413,21 @@ def createCustomerBillFrame(self):
         width=160,
         height=50
     )
+
+def checkIfInputsValid(self):
+    if self.productID == "":
+        messagebox.showerror("Error","Please select product from the list",parent=self.root)
+        return False
+
+    if self.productQuantity == "":
+        messagebox.showerror("Error","Quantity is required",parent=self.root)
+        return False
+    if int(self.productQuantity) > int(self.productStock):
+        messagebox.showerror("Error","Invalid Quantity",parent=self.root)
+        return False
+
+    # All tests pass, return true
+    return True
 
 
 class Billing:
@@ -552,19 +565,11 @@ class Billing:
     def addToCart(self):
         self.fetchTextFromInputBoxes()
 
-        if self.productID == "":
-            messagebox.showerror("Error","Please select product from the list",parent=self.root)
-            return
-
-        if self.productQuantity=="":
-            messagebox.showerror("Error","Quantity is required",parent=self.root)
-            return
-        if int(self.productQuantity)>int(self.productStock):
-            messagebox.showerror("Error","Invalid Quantity",parent=self.root)
+        if(checkIfInputsValid(self) == False):
             return
         
         cartData=[self.productID,self.productName,self.productPrice,self.productQuantity,self.productStock]
-        #---------- update cart --------------
+
         present="no"
         index=0
         for product in self.productsInCart:
@@ -574,10 +579,10 @@ class Billing:
             index+=1
         if present=="yes":
             confirmation=messagebox.askyesno("Confirm","Product already present\nDo you want to Update|Remove from the Cart List",parent=self.root)
-            if confirmation == False:
+            if(confirmation == False):
                 return
 
-            if self.productQuantity == "0":
+            if(self.productQuantity == "0"):
                 self.productsInCart.pop(inderror)
             else:
                 #self.productsInCart[index][2]=price_cal
@@ -688,17 +693,28 @@ class Billing:
         except Exception as error:
             messagebox.showerror("Error",f"Error due to : {str(error)}",parent=self.root)
 
-    def clearCart(self):
+    def clearNewProduct(self):
         self.productIDStringVar.set("")
         self.productNameStringVar.set("")
         self.productPriceStringVar.set("")
         self.productQuantityStringVar.set("")
         self.inStockLabel.config(text=f"In Stock")
         self.productStockStringVar.set("")
+    
+    def printBill(self):
+        if(self.isBillGenerated == False):
+            messagebox.showinfo("Print","Please generate bill to print the receipt",parent=self.root)
+            return
+
+        messagebox.showinfo("Print","Please wait while printing",parent=self.root)
+        newFile=tempfile.mktemp('.txt')
+        open(newFile,'w').write(self.billingListText)
+        os.startfile(newFile,'print')
 
     def clearTextInputs(self):
         del self.productsInCart[:]
-        self.clearCart()
+
+        self.clearNewProduct()
         self.displayProduct()
         self.showCart()
         self.customerNameStringVar.set("")
@@ -707,15 +723,6 @@ class Billing:
         self.billingListStringVar.delete('1.0',END)
         self.productCountLabel.config(text=f"Cart \t Total Products: [0]")
         self.productSearchStringVar.set("")
-    
-    def printBill(self):
-        if self.isBillGenerated == False:
-            messagebox.showinfo("Print","Please generate bill to print the receipt",parent=self.root)
-            return
-        messagebox.showinfo("Print","Please wait while printing",parent=self.root)
-        newFile=tempfile.mktemp('.txt')
-        open(newFile,'w').write(self.billingListText)
-        os.startfile(newFile,'print')
     
     def updateClock(self):
         currentTime=time.strftime("%I:%M:%S")

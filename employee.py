@@ -106,6 +106,34 @@ def createEmployeeList(self):
         columnWidths=(90,100,100,100,100,100,100,100,100,100,100)
     )
 
+def checkIfInputsValid(self):
+    if(self.employeeID == ""):
+        messagebox.showerror("Error","Employee ID must be required",parent=self.root)
+        return False
+
+    if(self.employeeID.isdigit() == False):
+        messagebox.showerror("Error","Employee ID must be a number",parent=self.root)
+        return False
+
+    if(self.employeeName == "" or self.employeeEmail == "" or self.employeeGender == "Select"):
+        messagebox.showerror("Error","All fields are required",parent=self.root)
+        return False
+
+    if(self.employeeAddress == "" or self.employeeDOJ == "" or self.employeeDOB == ""):
+        messagebox.showerror("Error","All fields are required",parent=self.root)
+        return False
+
+    if(self.employeePassword == "" or self.employeeContact == "" or self.employeeSalary == ""):
+        messagebox.showerror("Error","All fields are required",parent=self.root)
+        return False
+
+    if(self.employeeSalary.isdigit() == False):
+        messagebox.showerror("Error","Salary must be a number",parent=self.root)
+        return False
+
+    #All tests pass, return true
+    return True
+
 class Employee:
     def __init__(self,root):
         self.root=root
@@ -146,7 +174,7 @@ class Employee:
         self.employeeGender = self.genderStringVar.get()
         self.employeeContact = self.contactStringVar.get()
         self.employeeName = self.nameStringVar.get()
-        self.employeeDateOfBirth = self.dobStringVar.get()
+        self.employeeDOB = self.dobStringVar.get()
         self.employeeDOJ = self.dojStringVar.get()
         self.employeeEmail = self.emailStringVar.get()
         self.employeePassword = self.passwordStringVar.get()
@@ -159,9 +187,8 @@ class Employee:
 
     def addEmployee(self):
         self.fetchTextFromInputBoxes()
-
-        if self.employeeID=="":
-            messagebox.showerror("Error","Employee ID must be required",parent=self.root)
+        
+        if(checkIfInputsValid(self) == False):
             return
 
         connection = sqlite3.connect(database=config.databaseURL)
@@ -179,7 +206,7 @@ class Employee:
                 self.employeeEmail,
                 self.employeeGender,
                 self.employeeContact,
-                self.employeeDateOfBirth,
+                self.employeeDOB,
                 self.employeeDOJ,
                 self.employeePassword,
                 self.employeeUserType,
@@ -194,25 +221,10 @@ class Employee:
         except Exception as error:
             messagebox.showerror("Error",f"Error due to : {str(error)}")
 
-    def updateEmployeeList(self):
-        self.fetchTextFromInputBoxes()
-
-        connection = sqlite3.connect(database=config.databaseURL)
-        cursor=connection.cursor()
-        try:
-            cursor.execute("select * from employee")
-            response=cursor.fetchall()
-            self.employeeTable.delete(*self.employeeTable.get_children())
-            for employee in response:
-                self.employeeTable.insert('',END,values=employee)
-        except Exception as error:
-            messagebox.showerror("Error",f"Error due to : {str(error)}")
-
     def updateEmployee(self):
         self.fetchTextFromInputBoxes()
 
-        if self.employeeID=="":
-            messagebox.showerror("Error","Employee ID must be required",parent=self.root)
+        if(checkIfInputsValid(self) == False):
             return
 
         connection = sqlite3.connect(database=config.databaseURL)
@@ -229,7 +241,7 @@ class Employee:
                 self.employeeEmail,
                 self.employeeGender,
                 self.employeeContact,
-                self.employeeDateOfBirth,
+                self.employeeDOB,
                 self.employeeDOJ,
                 self.employeePassword,
                 self.employeeUserType,
@@ -244,10 +256,9 @@ class Employee:
             messagebox.showerror("Error",f"Error due to : {str(error)}")
 
     def deleteEmployee(self):
-        self.fetchTextFromInputBoxes
+        self.fetchTextFromInputBoxes()
 
-        if self.employeeID=="":
-            messagebox.showerror("Error","Employee ID must be required",parent=self.root)
+        if(checkIfInputsValid(self) == False):
             return
 
         connection = sqlite3.connect(database=config.databaseURL)
@@ -270,12 +281,25 @@ class Employee:
         except Exception as error:
             messagebox.showerror("Error",f"Error due to : {str(error)}")
 
+    def updateEmployeeList(self):
+        connection = sqlite3.connect(database=config.databaseURL)
+        cursor=connection.cursor()
+        try:
+            cursor.execute("select * from employee")
+            response=cursor.fetchall()
+            self.employeeTable.delete(*self.employeeTable.get_children())
+            for employee in response:
+                self.employeeTable.insert('',END,values=employee)
+        except Exception as error:
+            messagebox.showerror("Error",f"Error due to : {str(error)}")
+
     def searchEmployee(self):
         self.fetchTextFromInputBoxes()
 
         if self.searchType == "Select":
             messagebox.showerror("Error","Select Search By option",parent=self.root)
             return
+
         elif self.searchName == "":
             messagebox.showerror("Error","Search input should be required",parent=self.root)
             return
@@ -285,14 +309,13 @@ class Employee:
         try:
             cursor.execute("select * from employee where "+self.searchType+" LIKE '%"+self.searchName+"%'")
             response = cursor.fetchall()
-
             if(len(response) == 0):
                 messagebox.showerror("Error","No record found!!!",parent=self.root)
                 return
 
             self.employeeTable.delete(*self.employeeTable.get_children())
             for employee in response:
-                self.employeeTable.insert('',END,values=row)   
+                self.employeeTable.insert('',END,values=employee)   
         except Exception as error:
             messagebox.showerror("Error",f"Error due to : {str(error)}")
 

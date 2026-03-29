@@ -20,7 +20,7 @@ def createDecorations(self):
     headerLabel.pack(side=TOP, fill=X, padx=10, pady=20)
 
     searchLabel = components.createLabel(self.root,text="Invoice No.",position=[50,100])
-    searchEntry = components.createEntry(self.root,textvariable=self.searchStringVar,position=[160,100],height=28)
+    self.billSearchText = components.createEntry(self.root,textvariable=self.searchStringVar,position=[160,100],height=28)
 
     searchButton = components.createButton(
         self.root,
@@ -73,7 +73,6 @@ def createBillDisplayFrame(self):
     self.billTextArea = Text(billFrame, background="lightyellow", yscrollcommand=billScrollbar.set)
     billScrollbar.pack(side=RIGHT, fill=Y)
     billScrollbar.config(command=self.billTextArea.yview)
-    self.billTextArea.state = "readonly"
     self.billTextArea.pack(fill=BOTH, expand=1)
 
 
@@ -139,8 +138,8 @@ class Sales:
 
     def clearTextFields(self):
         self.updateBillsList()
+        self.searchStringVar.set("")
         self.billTextArea.delete('1.0', END)
-
 
 if __name__ == "__main__":
     root = Tk()
