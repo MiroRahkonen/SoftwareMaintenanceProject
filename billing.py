@@ -559,7 +559,7 @@ class Billing:
         self.productNameStringVar.set(productInfo[1])
         self.productPriceStringVar.set(productInfo[2])
         self.productQuantityStringVar.set(productInfo[3])
-        self.inStockLabel.config(text=f"In Stock [{str(pproductInfo[4])}]")
+        self.inStockLabel.config(text=f"In Stock [{str(productInfo[4])}]")
         self.productStockStringVar.set(productInfo[4])
         
     def addToCart(self):
