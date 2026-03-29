@@ -588,7 +588,7 @@ class Billing:
             else:
                 self.productsInCart[index][3]=self.productQuantity
         else:
-            self.productsInCar.append(cartData)
+            self.productsInCart.append(cartData)
         self.showCart()
         self.updateBill()
 
