@@ -5,6 +5,4 @@
 - `sqlite3`: `pip install sqlite3`
 - `os`: `pip install os`
 
-2. Run `create_db.py` file to create the initial sqlite database for the application
-
-3. Run `dashboard.py` to start the application
+2. Run `dashboard.py` to start the application

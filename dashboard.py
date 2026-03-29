@@ -5,6 +5,7 @@ import sqlite3
 import os
 import config
 import components
+import database
 
 from employee import Employee
 from supplier import Supplier
@@ -228,6 +229,9 @@ class Dashboard:
 
 
 if __name__ == "__main__":
+    #Initialize sqlite database
+    database.createDatabase()
+
     root = Tk()
     obj = Dashboard(root)
     root.mainloop()
