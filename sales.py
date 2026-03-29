@@ -102,7 +102,7 @@ class Sales:
         self.billList.delete(0, END)
 
         for bill in os.listdir(config.billsDirectory):
-            if bill.split('.')[-1] == 'txt':
+            if(bill.split('.')[-1] == 'txt'):
                 self.billList.insert(END, bill)
                 self.allBills.append(bill.split('.')[0])
             
@@ -122,11 +122,11 @@ class Sales:
     def searchBill(self):
         searchInput = self.searchStringVar.get()
 
-        if searchInput == "":
+        if(searchInput == ""):
             messagebox.showerror("Error", "Invoice no. should be required", parent=self.root)
             return
 
-        if searchInput in self.allBills:
+        if(searchInput in self.allBills):
             filePath = os.path.join(config.billsDirectory, f"{searchInput}.txt")
             self.billTextArea.delete('1.0', END)
 

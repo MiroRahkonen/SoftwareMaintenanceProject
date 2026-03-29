@@ -105,7 +105,7 @@ class Category:
 
     def addCategory(self):
         self.fetchTextFromInputBoxes()
-        if self.categoryName == "":
+        if(self.categoryName == ""):
             messagebox.showerror("Error","Category Name must be required",parent=self.root)
             return
 
@@ -114,7 +114,7 @@ class Category:
         try:
             cursor.execute("Select * from category where name=?",(self.categoryName,))
             category=cursor.fetchone()
-            if category != None:
+            if(category != None):
                 messagebox.showerror("Error","Category already present",parent=self.root)
                 return
 
@@ -154,7 +154,7 @@ class Category:
     def deleteCategory(self):
         self.fetchTextFromInputBoxes()
         
-        if self.categoryName == "":
+        if(self.categoryName == ""):
             messagebox.showerror("Error","Category name must be required",parent=self.root)
             return
 
@@ -163,12 +163,12 @@ class Category:
         try:
             cursor.execute("Select * from category where name=?",(self.categoryName,))
             response = cursor.fetchone()
-            if response == None:
+            if(response == None):
                 messagebox.showerror("Error","Invalid Category Name",parent=self.root)
                 return
                 
             confirmation = messagebox.askyesno("Confirm","Do you really want to delete?",parent=self.root)
-            if confirmation == False:
+            if(confirmation == False):
                 return
             
             cursor.execute("delete from category where name=?",(self.categoryName,))

@@ -1,0 +1,12 @@
+
+        		XYZ-Inventory
+        	 Phone No. 9899459288 , Delhi-110053
+        ==============================================
+         Customer Name: Ernm
+         Ph. no. : sdfsdfsdf
+         Bill No. 29134164			Date: 29/03/2026
+        ==============================================
+         Product Name			QTY	Price
+        ==============================================
+        
+ TestProduct			1	Rs.100.0

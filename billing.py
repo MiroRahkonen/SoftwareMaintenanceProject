@@ -415,14 +415,14 @@ def createCustomerBillFrame(self):
     )
 
 def checkIfInputsValid(self):
-    if self.productID == "":
+    if(self.productID == ""):
         messagebox.showerror("Error","Please select product from the list",parent=self.root)
         return False
 
-    if self.productQuantity == "":
+    if(self.productQuantity == ""):
         messagebox.showerror("Error","Quantity is required",parent=self.root)
         return False
-    if int(self.productQuantity) > int(self.productStock):
+    if(int(self.productQuantity) > int(self.productStock)):
         messagebox.showerror("Error","Invalid Quantity",parent=self.root)
         return False
 
@@ -509,7 +509,7 @@ class Billing:
     def searchProduct(self):
         self.fetchTextFromInputBoxes()
 
-        if self.productSearch=="":
+        if(self.productSearch == ""):
             messagebox.showerror("Error","Search input should be required",parent=self.root)
             return
 
@@ -519,7 +519,7 @@ class Billing:
             cursor.execute("select pid,name,price,qty,status from product where name LIKE '%"+self.productSearch+"%'")
             productData = cursor.fetchall()
 
-            if (len(productData) == 0):
+            if(len(productData) == 0):
                 messagebox.showerror("Error","No record found!!!",parent=self.root)
                 return
 
@@ -573,11 +573,11 @@ class Billing:
         present="no"
         index=0
         for product in self.productsInCart:
-            if self.productID == product[0]:
+            if(self.productID == product[0]):
                 present="yes"
                 break
             index+=1
-        if present=="yes":
+        if(present = "yes"):
             confirmation=messagebox.askyesno("Confirm","Product already present\nDo you want to Update|Remove from the Cart List",parent=self.root)
             if(confirmation == False):
                 return
@@ -615,11 +615,15 @@ class Billing:
     def generateBill(self):
         self.fetchTextFromInputBoxes()
 
-        if self.customerName == "" or self.customerContact == "":
+        if(self.customerName == "" or self.customerContact == ""):
             messagebox.showerror("Error",f"Customer Details are required",parent=self.root)
             return
 
-        if len(self.productsInCart)==0:
+        if(self.customerContact.isdigit() == False):
+            messagebox.showerror("Error",f"Contact number must be a number",parent=self.root)
+            return
+
+        if(len(self.productsInCart)==0):
             messagebox.showerror("Error",f"Please Add product to the Cart!!!",parent=self.root)
             return
         
@@ -671,12 +675,12 @@ class Billing:
         cursor=connection.cursor()
         try:
             for product in self.productsInCart:
-                pid=product[0]
-                name=product[1]
-                qty=int(product[4])-int(product[3])
-                if int(product[3])==int(product[4]):
+                pid = product[0]
+                name = product[1]
+                qty = int(product[4])-int(product[3])
+                if(int(product[3]) == int(product[4])):
                     status="Inactive"
-                if int(product[3])!=int(product[4]):
+                if(int(product[3]) != int(product[4])):
                     status="Active"
                 price=float(product[2])*int(product[3])
                 price=str(price)

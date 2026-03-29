@@ -196,7 +196,7 @@ class Employee:
         try:
             cursor.execute("Select * from employee where eid=?",(self.employeeID,))
             response = cursor.fetchone()
-            if response!=None:
+            if(response != None):
                 messagebox.showerror("Error","This Employee ID is already assigned",parent=self.root)
                 return
 
@@ -232,7 +232,7 @@ class Employee:
         try:
             cursor.execute("Select * from employee where eid=?",(self.employeeID,))
             response = cursor.fetchone()
-            if response == None:
+            if(response == None):
                 messagebox.showerror("Error","Invalid Employee ID",parent=self.root)
                 return
                 
@@ -266,12 +266,12 @@ class Employee:
         try:
             cursor.execute("Select * from employee where eid=?",(self.employeeID,))
             response=cursor.fetchone()
-            if response==None:
+            if(response==None):
                 messagebox.showerror("Error","Invalid Employee ID",parent=self.root)
                 return
 
             userConfirmation = messagebox.askyesno("Confirm","Do you really want to delete?",parent=self.root)
-            if userConfirmation == False:
+            if(userConfirmation == False):
                 return
 
             cursor.execute("delete from employee where eid=?",(self.employeeID,))
@@ -296,11 +296,11 @@ class Employee:
     def searchEmployee(self):
         self.fetchTextFromInputBoxes()
 
-        if self.searchType == "Select":
+        if(self.searchType == "Select"):
             messagebox.showerror("Error","Select Search By option",parent=self.root)
             return
 
-        elif self.searchName == "":
+        if(self.searchName == ""):
             messagebox.showerror("Error","Search input should be required",parent=self.root)
             return
 

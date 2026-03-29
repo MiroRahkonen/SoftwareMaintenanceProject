@@ -135,14 +135,6 @@ def updateProductList(self):
         messagebox.showerror("Error",f"Error due to : {str(error)}")
 
 def checkIfInputsValid(self):
-    if(self.productID == ""):
-        messagebox.showerror("Error","Select a product from the list",parent=self.root)
-        return False
-
-    if(self.productID.isdigit() == False):
-        messagebox.showerror("Error","Product ID must be a number",parent=self.root)
-        return False
-
     if(self.productCategory == "Select" or self.productCategory == "Empty"):
         messagebox.showerror("Error","All fields are required",parent=self.root)
         return False
@@ -238,7 +230,7 @@ class Product:
         try:
             cursor.execute("Select * from product where name=?",(self.productName,))
             response=cursor.fetchone()
-            if response!=None:
+            if(response != None):
                 messagebox.showerror("Error","Product already present",parent=self.root)
                 return
             
@@ -264,7 +256,7 @@ class Product:
         try:
             cursor.execute("Select * from product where pid=?",(self.productID))
             response=cursor.fetchone()
-            if response==None:
+            if(response == None):
                 messagebox.showerror("Error","Invalid Product",parent=self.root)
                 return
            
@@ -288,12 +280,12 @@ class Product:
         try:
             cursor.execute("Select * from product where pid=?",(self.productID,))
             response=cursor.fetchone()
-            if response==None:
+            if(response == None):
                 messagebox.showerror("Error","Invalid Product",parent=self.root)
                 return
             
             userConfirmation=messagebox.askyesno("Confirm","Do you really want to delete?",parent=self.root)
-            if userConfirmation==True:
+            if(userConfirmation == True):
                 cursor.execute("delete from product where pid=?",(self.productID,))
                 connection.commit()
                 messagebox.showinfo("Delete","Product Deleted Successfully",parent=self.root)
@@ -304,10 +296,10 @@ class Product:
     def searchProduct(self):
         self.fetchTextFromInputBoxes()
 
-        if self.searchProductType == "Select":
+        if(self.searchProductType == "Select"):
             messagebox.showerror("Error","Select Search By option",parent=self.root)
             return
-        if self.searchProductName == "":
+        if(self.searchProductName == ""):
             messagebox.showerror("Error","Search input should be required",parent=self.root)
             return
 

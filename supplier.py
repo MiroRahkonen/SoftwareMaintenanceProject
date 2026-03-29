@@ -58,7 +58,7 @@ def createSupplierList(self):
     )
 
 def checkIfInputsValid(self):
-    if self.invoiceNumber == "":
+    if(self.invoiceNumber == ""):
         messagebox.showerror("Error","Invoice No. must be required",parent=self.root)
         return False
     
@@ -66,7 +66,7 @@ def checkIfInputsValid(self):
         messagebox.showerror("Error","Invoice No. must be a number",parent=self.root)
         return False
 
-    if self.supplierName == "" or self.supplierContact == "":
+    if(self.supplierName == "" or self.supplierContact == ""):
         messagebox.showerror("Error","All fields are required",parent=self.root)
         return False
     
@@ -127,7 +127,7 @@ class Supplier:
         try:
             cursor.execute("Select * from supplier where invoice=?",(self.invoiceNumber,))
             response=cursor.fetchone()
-            if response!=None:
+            if(response != None):
                 messagebox.showerror("Error","Invoice no. is already assigned",parent=self.root)
                 return
 
@@ -156,7 +156,7 @@ class Supplier:
         try:
             cursor.execute("Select * from supplier where invoice=?",(self.invoiceNumber,))
             response=cursor.fetchone()
-            if response==None:
+            if(response == None):
                 messagebox.showerror("Error","Invalid Invoice No.",parent=self.root)
                 return
             
@@ -183,12 +183,12 @@ class Supplier:
         try:
             cursor.execute("Select * from supplier where invoice=?",(self.invoiceNumber,))
             response=cursor.fetchone()
-            if response==None:
+            if(response == None):
                 messagebox.showerror("Error","Invalid Invoice No.",parent=self.root)
                 return
             
             userConfirmation=messagebox.askyesno("Confirm","Do you really want to delete?",parent=self.root)
-            if userConfirmation == False:
+            if(userConfirmation == False):
                 return
 
             cursor.execute("delete from supplier where invoice=?",(self.invoiceNumber,))
@@ -222,7 +222,7 @@ class Supplier:
     def searchInvoice(self):
         self.fetchTextFromInputBoxes()
 
-        if self.searchInput == "":
+        if(self.searchInput == ""):
             messagebox.showerror("Error","Invoice No. should be required",parent=self.root)
             return
 
@@ -231,7 +231,7 @@ class Supplier:
         try:
             cursor.execute("select * from supplier where invoice=?",(self.searchInput,))
             response=cursor.fetchone()
-            if response!=None:
+            if(response != None):
                 self.supplierTable.delete(*self.supplierTable.get_children())
                 self.supplierTable.insert('',END,values=response)
             else:
