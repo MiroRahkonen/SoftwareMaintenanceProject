@@ -70,7 +70,7 @@ def createBillDisplayFrame(self):
     ).pack(side=TOP, fill=X)
 
     billScrollbar = Scrollbar(billFrame, orient=VERTICAL)
-    self.billTextArea = Text(billFrame, background="lightyellow", yscrollcommand=billScrollbar.set)
+    self.billTextArea = Text(billFrame, background="lightyellow", state="disabled", yscrollcommand=billScrollbar.set)
     billScrollbar.pack(side=RIGHT, fill=Y)
     billScrollbar.config(command=self.billTextArea.yview)
     self.billTextArea.pack(fill=BOTH, expand=1)

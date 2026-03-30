@@ -3,6 +3,7 @@ from tkinter import ttk,messagebox
 import sqlite3
 import config
 import components
+from datetime import datetime
 
 def createSearchFrame(self):
     #---------- Search Frame -------------
@@ -129,6 +130,14 @@ def checkIfInputsValid(self):
 
     if(self.employeeSalary.isdigit() == False):
         messagebox.showerror("Error","Salary must be a number",parent=self.root)
+        return False
+
+    # Test if date of birth is valid
+    # Method adopted from this article: https://pythonguides.com/check-if-a-string-is-a-valid-date-in-python/
+    try:
+        datetime.strptime(self.employeeDOB,"%d.%m.%Y")
+    except ValueError:
+        messagebox.showerror("Error","Date of birth must be in format 'DD.MM.YYYY'",parent=self.root)
         return False
 
     #All tests pass, return true

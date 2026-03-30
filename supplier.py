@@ -21,19 +21,19 @@ def createSupplierFrame(self):
 
     # Invoice Field
     components.createLabel(self.root,text="Invoice No.",position=[50,80])
-    components.createEntry(self.root,textvariable=self.invoiceStringVar,position=[180,80])
+    components.createEntry(self.root,textvariable=self.invoiceNumberStringVar,position=[180,80])
 
     # Name Field
     components.createLabel(self.root,text="Name",position=[50,120])
-    components.createEntry(self.root,textvariable=self.supplierStringVar,position=[180,120])
+    components.createEntry(self.root,textvariable=self.supplierNameStringVar,position=[180,120])
 
     # Contact Field
     components.createLabel(self.root,text="Contact",position=[50,160])
-    components.createEntry(self.root,textvariable=self.nameStringVar,position=[180,160])
+    components.createEntry(self.root,textvariable=self.supplierContactStringVar,position=[180,160])
 
     # Description Field
     components.createLabel(self.root,text="Description",position=[50,200])
-    self.descriptionText = components.createText(self.root,position=[180,200],width=470,height=120)
+    self.supplierDescriptionTextarea = components.createText(self.root,position=[180,200],width=470,height=120)
 
     # Create management buttons
     components.createButton(self.root,text="Save",command=self.addSupplier,background="#2196f3",position=[180,370])
@@ -84,9 +84,9 @@ class Supplier:
 
         # Tkinter StringVar variables
         self.searchStringVar = StringVar()
-        self.invoiceStringVar = StringVar()
-        self.supplierStringVar = StringVar()
-        self.nameStringVar = StringVar()
+        self.invoiceNumberStringVar = StringVar()
+        self.supplierNameStringVar = StringVar()
+        self.supplierContactStringVar = StringVar()
 
         ## Initialize Interface
         createSearchFrame(self)
@@ -99,10 +99,10 @@ class Supplier:
 
     def fetchTextFromInputBoxes(self):
         self.searchInput = self.searchStringVar.get()
-        self.invoiceNumber = self.invoiceStringVar.get()
-        self.supplierName = self.supplierStringVar.get()
-        self.supplierContact = self.nameStringVar.get()
-        self.supplierDescription = self.descriptionText.get('1.0',END)
+        self.invoiceNumber = self.invoiceNumberStringVar.get()
+        self.supplierName = self.supplierNameStringVar.get()
+        self.supplierContact = self.supplierContactStringVar.get()
+        self.supplierDescription = self.supplierDescriptionTextarea.get('1.0',END)
 
     def fetchSuppliers(self):
         connection=sqlite3.connect(database=config.databaseURL)
@@ -199,10 +199,10 @@ class Supplier:
             messagebox.showerror("Error",f"Error due to : {str(error)}")
 
     def clearTextFields(self):
-        self.invoiceStringVar.set("")
-        self.supplierStringVar.set("")
-        self.nameStringVar.set("")
-        self.descriptionText.delete('1.0',END)
+        self.invoiceNumberStringVar.set("")
+        self.supplierNameStringVar.set("")
+        self.supplierContactStringVar.set("")
+        self.supplierDescriptionTextarea.delete('1.0',END)
         self.searchStringVar.set("")
         self.fetchSuppliers()
 
@@ -213,11 +213,11 @@ class Supplier:
         if(len(supplierListing) == 0):
             return
             
-        self.invoiceStringVar.set(supplierListing[0])
-        self.supplierStringVar.set(supplierListing[1])
-        self.nameStringVar.set(supplierListing[2])
-        self.descriptionText.delete('1.0',END)
-        self.descriptionText.insert(END,supplierListing[3])
+        self.invoiceNumberStringVar.set(supplierListing[0])
+        self.supplierNameStringVar.set(supplierListing[1])
+        self.supplierContactStringVar.set(supplierListing[2])
+        self.supplierDescriptionTextarea.delete('1.0',END)
+        self.supplierDescriptionTextarea.insert(END,supplierListing[3])
 
     def searchInvoice(self):
         self.fetchTextFromInputBoxes()

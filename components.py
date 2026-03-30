@@ -62,7 +62,8 @@ def createText(self, height, width, position=[]):
 
 def createEntry(
     self,
-    textvariable=None, 
+    textvariable=None,
+    state="normal",
     font=defaultFont, 
     background="lightyellow", 
     fg=None,
@@ -73,6 +74,7 @@ def createEntry(
     entry=Entry(
         self,
         textvariable=textvariable,
+        state=state,
         font=font,
         background=background,
         fg=fg

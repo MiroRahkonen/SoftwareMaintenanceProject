@@ -275,26 +275,35 @@ def createProductInfoFrame(self):
     productNameEntry = components.createEntry(
         cartWidgetFrame,
         textvariable=self.productNameStringVar,
+        state=DISABLED,
         font=("times new roman",15),
         position=[5,35],
         width=190,
         height=22
     )
-    productNameEntry.state = "readonly"
+    #productNameEntry.state = DISABLED
 
     components.createLabel(cartWidgetFrame,text="Price Per Qty",position=[230,5])
     productPriceEntry = components.createEntry(
         cartWidgetFrame,
         textvariable=self.productPriceStringVar,
+        state=DISABLED,
         font=("times new roman",15),
         position=[230,35],
         width=150,
         height=22
     )
-    productPriceEntry.state = "readonly"
+    #productPriceEntry.state = DISABLED
 
     components.createLabel(cartWidgetFrame,text="Quantity",position=[390,5])
-    productQuantityEntry=Entry(cartWidgetFrame,textvariable=self.productQuantityStringVar,font=("times new roman",15),background="lightyellow").place(x=390,y=35,width=120,height=22)
+    productQuantityEntry = components.createEntry(
+        cartWidgetFrame,
+        textvariable=self.productQuantityStringVar,
+        font=("times new roman",15),
+        position=[390,35],
+        width=120,
+        height=22
+    )
 
     self.inStockLabel = components.createLabel(cartWidgetFrame,text="In Stock",position=[5,70])
 
@@ -339,9 +348,9 @@ def createCustomerBillFrame(self):
     scrolly=Scrollbar(billingFrame,orient=VERTICAL)
     scrolly.pack(side=RIGHT,fill=Y)
 
-    self.billingListStringVar = Text(billingFrame,yscrollcommand=scrolly.set)
-    self.billingListStringVar.pack(fill=BOTH,expand=1)
-    scrolly.config(command=self.billingListStringVar.yview)
+    self.billTextArea = Text(billingFrame,yscrollcommand=scrolly.set)
+    self.billTextArea.pack(fill=BOTH,expand=1)
+    scrolly.config(command=self.billTextArea.yview)
 
     billMenuFrame = components.createFrame(self.root,bd=2,position=[953,520],width=400,height=140)
 
@@ -419,11 +428,12 @@ def checkIfInputsValid(self):
         messagebox.showerror("Error","Please select product from the list",parent=self.root)
         return False
 
-    if(self.productQuantity == ""):
-        messagebox.showerror("Error","Quantity is required",parent=self.root)
+    if(self.productQuantity.isdigit() == False or self.productQuantity == ""):
+        messagebox.showerror("Error","Quantity must be a number",parent=self.root)
         return False
+
     if(int(self.productQuantity) > int(self.productStock)):
-        messagebox.showerror("Error","Invalid Quantity",parent=self.root)
+        messagebox.showerror("Error","Not enough products in stock",parent=self.root)
         return False
 
     # All tests pass, return true
@@ -469,7 +479,7 @@ class Billing:
         self.customerName = self.customerNameStringVar.get()
         self.customerContact = self.customerContactStringVar.get()
         
-        self.billingListText = self.billingListStringVar.get('1.0',END)
+        self.billText = self.billTextArea.get('1.0',END)
         self.calculatorInput = self.calculatorStringVar.get()
         
         self.productSearch = self.productSearchStringVar.get()
@@ -627,19 +637,28 @@ class Billing:
             messagebox.showerror("Error",f"Please Add product to the Cart!!!",parent=self.root)
             return
         
+        # Remove read only state from bill text area
+        self.billTextArea.config(state="normal")
+
         # Create bill into interface
         self.generateBillTop()
         self.generateBillMiddle()
         self.generateBillBottom()
 
+        # Make bill text read-only
+        self.billTextArea.config(state="disabled")
+
         fp=open(f'bills/{str(self.invoice)}.txt','w')
-        fp.write(self.billingListText)
+        fp.write(self.billText)
         fp.close()
         messagebox.showinfo("Saved","Bill has been generated",parent=self.root)
         self.isBillGenerated = True
 
     def generateBillTop(self):
         self.fetchTextFromInputBoxes()
+
+        # Remove read only state from bill text area
+        self.billTextArea.config(state="normal")
 
         self.invoice=int(time.strftime("%H%M%S"))+int(time.strftime("%d%m%Y"))
         generateBillTopTemporary=f'''
@@ -653,8 +672,11 @@ class Billing:
          Product Name\t\t\tQTY\tPrice
         {str("="*46)}
         '''
-        self.billingListStringVar.delete('1.0',END)
-        self.billingListStringVar.insert('1.0',generateBillTopTemporary)
+        self.billTextArea.delete('1.0',END)
+        self.billTextArea.insert('1.0',generateBillTopTemporary)
+
+        # Make bill text read-only
+        self.billTextArea.config(state="disabled")
     
     def generateBillBottom(self):
         self.fetchTextFromInputBoxes()
@@ -666,7 +688,7 @@ class Billing:
          Net Pay\t\t\t\tRs.{self.netPay}
         {str("="*46)}\n
         '''
-        self.billingListStringVar.insert(END,generateBillBottomTemporary)
+        self.billTextArea.insert(END,generateBillBottomTemporary)
 
     def generateBillMiddle(self):
         self.fetchTextFromInputBoxes()
@@ -684,7 +706,7 @@ class Billing:
                     status="Active"
                 price=float(product[2])*int(product[3])
                 price=str(price)
-                self.billingListStringVar.insert(END,"\n "+name+"\t\t\t"+product[3]+"\tRs."+price)
+                self.billTextArea.insert(END,"\n "+name+"\t\t\t"+product[3]+"\tRs."+price)
                 #------------- update qty in product table --------------
                 cursor.execute("update product set qty=?,status=? where pid=?",(
                     qty,
@@ -712,7 +734,7 @@ class Billing:
 
         messagebox.showinfo("Print","Please wait while printing",parent=self.root)
         newFile=tempfile.mktemp('.txt')
-        open(newFile,'w').write(self.billingListText)
+        open(newFile,'w').write(self.billText)
         os.startfile(newFile,'print')
 
     def clearTextInputs(self):
@@ -724,7 +746,7 @@ class Billing:
         self.customerNameStringVar.set("")
         self.customerContactStringVar.set("")
         self.isBillGenerated = False
-        self.billingListStringVar.delete('1.0',END)
+        self.billTextArea.delete('1.0',END)
         self.productCountLabel.config(text=f"Cart \t Total Products: [0]")
         self.productSearchStringVar.set("")
     
