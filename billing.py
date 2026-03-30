@@ -470,7 +470,6 @@ class Billing:
         createCustomerBillFrame(self)
 
         self.displayProduct()
-        self.generateBillTop()
         self.updateClock()
         self.fetchTextFromInputBoxes()
     
@@ -657,9 +656,6 @@ class Billing:
     def generateBillTop(self):
         self.fetchTextFromInputBoxes()
 
-        # Remove read only state from bill text area
-        self.billTextArea.config(state="normal")
-
         self.invoice=int(time.strftime("%H%M%S"))+int(time.strftime("%d%m%Y"))
         generateBillTopTemporary=f'''
         \t\tXYZ-Inventory
@@ -674,9 +670,6 @@ class Billing:
         '''
         self.billTextArea.delete('1.0',END)
         self.billTextArea.insert('1.0',generateBillTopTemporary)
-
-        # Make bill text read-only
-        self.billTextArea.config(state="disabled")
     
     def generateBillBottom(self):
         self.fetchTextFromInputBoxes()
@@ -746,9 +739,14 @@ class Billing:
         self.customerNameStringVar.set("")
         self.customerContactStringVar.set("")
         self.isBillGenerated = False
-        self.billTextArea.delete('1.0',END)
         self.productCountLabel.config(text=f"Cart \t Total Products: [0]")
         self.productSearchStringVar.set("")
+        
+        self.billTextArea.config(state="normal")
+        self.billTextArea.delete('1.0',END)
+        self.billTextArea.config(state="disabled")
+
+
     
     def updateClock(self):
         currentTime=time.strftime("%I:%M:%S")
